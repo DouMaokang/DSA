@@ -25,6 +25,36 @@ def _merge(arr1, arr2):
     return result
 
 
+def merge_sort_in_place(arr, left, right):
+    if left >= right:
+        return arr
+
+    mid = left + (right - left) // 2
+    merge_sort_in_place(arr, left, mid)  # [left, mid)
+    merge_sort_in_place(arr, mid, right)  # [mid, right]
+    _merge_in_place(arr, left, mid, right)
+
+
+def _merge_in_place(arr, left, mid, right):
+    if left == mid or mid == right:
+        return
+
+
+def quick_sort():
+    pass
+
+
+def insertion_sort():
+    pass
+
+
+def bucket_sort():
+    pass
+
+
+def heap_sort():
+    pass
+
 
 if __name__ == '__main__':
     arr = [1, 3, 5, 7, 2, 4, 6, 8]
