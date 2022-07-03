@@ -28,6 +28,39 @@ class RangeSum:
         return self._query(1, 0, self.N - 1, l, r)
 
 
+class RangeMin:
+    def __init__(self, nums):
+        self.nums = nums
+        self.N = len(nums)
+        self.tree = [0] * 4 * self.N
+        self._build(1, 0, self.N - 1)
+
+    def _build(self, node: int, tl: int, tr: int):
+        if tl == tr:
+            self.tree[node] = self.nums[tl]
+        else:
+            mid = (tl + tr) // 2
+            self._build(node * 2, tl, mid)
+            self._build(node * 2 + 1, mid + 1, tr)
+            self.tree[node] = min(self.tree[node * 2], self.tree[node * 2 + 1])
+
+    def _query(self, node: int, tl: int, tr: int, l: int, r: int):
+        if l > r:
+            return float('inf')
+
+        if tl == l and tr == r:
+            return self.tree[node]
+
+        mid = (tl + tr) // 2
+        return min(self._query(node * 2, tl, mid, l, min(mid, r)), self._query(node * 2 + 1, mid + 1, tr, max(mid + 1, l), r))
+
+    def query(self, l: int, r: int):
+        return self._query(1, 0, self.N - 1, l, r)
+
+
 if __name__ == '__main__':
     rs = RangeSum([1, 2, 3, 4, 5])
     print(rs.query(0, 4))
+
+    rmin = RangeMin([1, 2, -1, 4, 5])
+    print(rmin.query(0, 0))
