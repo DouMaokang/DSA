@@ -21,7 +21,7 @@ class RangeSum:
         if tl == l and tr == r:
             return self.tree[node]
 
-        mid = (tl + tr) // 2
+        mid = (tl + tr) // 2  # mid of tree interval
         return self._query(node * 2, tl, mid, l, min(mid, r)) + self._query(node * 2 + 1, mid + 1, tr, max(mid + 1, l), r)
 
     def query(self, l: int, r: int):
