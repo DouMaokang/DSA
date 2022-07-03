@@ -1,4 +1,9 @@
 def merge_sort(arr):
+    """
+
+    Time complexity: O(NlogN) performance guaranteed regardless of the original ordering of the input.
+    Space complexity: O(N) for non-in-place merge. Ref: https://en.wikipedia.org/wiki/Merge_sort#Variants
+    """
     if len(arr) < 2:
         return arr
 
@@ -38,7 +43,7 @@ def insertion_sort(arr):
     for i in range(1, len(arr)):
         key = arr[i]
         j = i - 1
-        while j >= 0 and arr[j] > key:
+        while j >= 0 and arr[j] > key:  # can be fast or slow
             arr[j + 1] = arr[j]
             j -= 1
         arr[j + 1] = key
