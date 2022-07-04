@@ -24,8 +24,23 @@ class RangeSum:
         mid = (tl + tr) // 2  # mid of tree interval
         return self._query(node * 2, tl, mid, l, min(mid, r)) + self._query(node * 2 + 1, mid + 1, tr, max(mid + 1, l), r)
 
+    def _update(self, node, tl, tr, idx: int, val: int):
+        if tl == tr:
+            self.tree[node] = val
+        else:
+            mid = (tl + tr) // 2
+            if idx <= mid:
+                # left
+                self._update(node * 2, tl, mid, idx, val)
+            else:
+                self._update(node * 2 + 1, mid + 1, tr, idx, val)
+            self.tree[node] = self.tree[node * 2] + self.tree[node * 2 + 1]
+
     def query(self, l: int, r: int):
         return self._query(1, 0, self.N - 1, l, r)
+
+    def update(self, idx: int, val: int):
+        self._update(1, 0, self.N - 1, idx, val)
 
 
 class RangeMin:
@@ -61,6 +76,9 @@ class RangeMin:
 if __name__ == '__main__':
     rs = RangeSum([1, 2, 3, 4, 5])
     print(rs.query(0, 4))
+    rs.update(1, -1)
+    print(rs.query(1, 4))
 
-    rmin = RangeMin([1, 2, -1, 4, 5])
-    print(rmin.query(0, 0))
+
+    # rmin = RangeMin([1, 2, -1, 4, 5])
+    # print(rmin.query(0, 0))
