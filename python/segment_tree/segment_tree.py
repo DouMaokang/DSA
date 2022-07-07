@@ -124,7 +124,7 @@ class SegmentTree:
         if node.start == node.end:
             node.val = val
         else:
-            mid = node.get_mid()
+            mid = node.mid()
             if idx <= mid:
                 self.update(node.left, idx, val)
             else:
@@ -137,8 +137,50 @@ class SegmentTree:
 
         if node.start == l and node.end == r:
             return node.val
-        mid = node.get_mid()
+        mid = node.mid()
         return self.query(node.left, l, min(mid, r)) + self.query(node.right, max(mid + 1, l), r)
+
+
+class SegmentTreeRangeUpdate:
+    def __init__(self, nums):
+        self.nums = nums
+        self.N = len(nums) - 1
+        self.root = self.build(0, len(nums) - 1)
+
+    def build(self, l, r):
+        if l == r:
+            return TreeNode(l, r, self.nums[l])
+        else:
+            mid = (l + r) // 2
+            left_child = self.build(l, mid)
+            right_child = self.build(mid + 1, r)
+            return TreeNode(l, r, 0, left_child, right_child)
+
+    def _add(self, node: TreeNode, l: int, r: int, val):
+        if l > r:
+            return
+        if node.start == l and node.end == r:
+            node.val += val
+        else:
+            mid = node.mid()
+            self._add(node.left, l, min(mid, r), val)
+            self._add(node.right, max(l, mid + 1), r, val)
+
+    def add(self, l, r, val):
+        self._add(self.root, l, r, val)
+
+    def _get(self, node: TreeNode, idx):
+        if node.start == node.end:
+            return node.val
+        else:
+            mid = node.mid()
+            if idx <= mid:
+                return node.val + self._get(node.left, idx)
+            else:
+                return node.val + self._get(node.right, idx)
+
+    def get(self, idx):
+        return self._get(self.root, idx)
 
 
 if __name__ == '__main__':
@@ -160,3 +202,20 @@ if __name__ == '__main__':
     print(st.query(st.root, 0, 2))
     st.update(st.root, 1, 1)
     print(st.query(st.root, 0, 2))
+
+    nums = [1, 2, 3, 4, 5, 6]
+    st_range_update = SegmentTreeRangeUpdate(nums)
+    assert st_range_update.get(0) == 1
+    assert st_range_update.get(1) == 2
+    st_range_update.add(0, 3, 1)
+    assert st_range_update.get(0) == 2
+    assert st_range_update.get(1) == 3
+    assert st_range_update.get(2) == 4
+    st_range_update.add(2, 5, -1)
+    assert st_range_update.get(0) == 2
+    assert st_range_update.get(1) == 3
+    print(st_range_update.get(2))
+    assert st_range_update.get(2) == 3
+    assert st_range_update.get(3) == 4
+    assert st_range_update.get(4) == 4
+    assert st_range_update.get(5) == 5
