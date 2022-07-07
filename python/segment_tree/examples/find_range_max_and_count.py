@@ -5,6 +5,18 @@ Finding the maximum and the number of times it appears in [l, r]
 from segment_tree.segment_tree import TreeNode
 
 
+def compare(a, b):
+    val = {}
+    if a['max'] > b['max']:
+        val = a
+    elif a['max'] < b['max']:
+        val = b
+    else:
+        val['max'] = a['max']
+        val['count'] = a['count'] + b['count']
+    return val
+
+
 class SegmentTree:
     _MIN_VALUE = {'max': float('-inf'), 'count': 0}
 
@@ -13,17 +25,6 @@ class SegmentTree:
         self.N = len(nums)
         self.root = self.build(0, self.N - 1)
 
-    def _compare(self, a, b):
-        val = {}
-        if a['max'] > b['max']:
-            val = a
-        elif a['max'] < b['max']:
-            val = b
-        else:
-            val['max'] = a['max']
-            val['count'] = a['count'] + b['count']
-        return val
-
     def build(self, l: int, r: int):
         if l == r:
             return TreeNode(l, r, {'max': self.nums[l], 'count': 1})
@@ -31,7 +32,7 @@ class SegmentTree:
             mid = (l + r) // 2
             left_child = self.build(l, mid)
             right_child = self.build(mid + 1, r)
-            val = self._compare(left_child.val, right_child.val)
+            val = compare(left_child.val, right_child.val)
             return TreeNode(l, r, val, left_child, right_child)
 
     def _query(self, node: TreeNode, l: int, r: int):
@@ -41,12 +42,11 @@ class SegmentTree:
             return node.val
 
         mid = node.mid()
-        return self._compare(self._query(node.left, l, min(mid, r)),
-                             self._query(node.right, max(mid + 1, l), r))
+        return compare(self._query(node.left, l, min(mid, r)),
+                       self._query(node.right, max(mid + 1, l), r))
 
     def query(self, l: int, r: int):
         return self._query(self.root, l, r)
-
 
     def _update(self, node: TreeNode, idx: int, val):
         if node.start == node.end:
@@ -57,7 +57,7 @@ class SegmentTree:
                 self._update(node.left, idx, val)
             else:
                 self._update(node.right, idx, val)
-            node.val = self._compare(node.left.val, node.right.val)
+            node.val = compare(node.left.val, node.right.val)
 
     def update(self, idx: int, val):
         self._update(self.root, idx, val)
