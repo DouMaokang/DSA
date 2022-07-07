@@ -88,14 +88,22 @@ class RangeMin:
 
 
 class TreeNode:
-    def __init__(self, start, end, val, left=None, right=None):
+    def __init__(self, start: int, end: int, val, left: 'TreeNode' = None, right: 'TreeNode' = None):
+        """
+        Segment tree node.
+        :param start: interval start (inclusive)
+        :param end: interval end (inclusive)
+        :param val: value store in the node
+        :param left: left child
+        :param right: right child
+        """
         self.start = start
         self.end = end
         self.val = val
         self.left = left
         self.right = right
 
-    def get_mid(self):
+    def mid(self):
         return (self.start + self.end) // 2
 
 
@@ -152,4 +160,3 @@ if __name__ == '__main__':
     print(st.query(st.root, 0, 2))
     st.update(st.root, 1, 1)
     print(st.query(st.root, 0, 2))
-
