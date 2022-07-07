@@ -16,7 +16,6 @@ def compare(a, b):
         val['count'] = a['count'] + b['count']
     return val
 
-
 class SegmentTree:
     _MIN_VALUE = {'max': float('-inf'), 'count': 0}
 
