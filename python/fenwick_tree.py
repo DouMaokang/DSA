@@ -10,7 +10,7 @@ class FenwickTree:
             self.tree[idx] += delta
             idx = self._h(idx)
 
-    def get_sum(self, idx: int):
+    def get_prefix_sum(self, idx: int):
         """
         Sum of elements in range [0, idx]
         """
@@ -19,6 +19,9 @@ class FenwickTree:
             result += self.tree[idx]
             idx = self._g(idx) - 1
         return result
+
+    def get_range_sum(self, start: int, end: int):
+        return self.get_prefix_sum(end) - self.get_prefix_sum(start - 1)
 
     def _g(self, i: int):
         """
@@ -36,9 +39,21 @@ class FenwickTree:
 if __name__ == '__main__':
     nums = [0, 1, 2, 3, 4]
     ft = FenwickTree(nums)
-    assert ft.get_sum(4) == 10
-    assert ft.get_sum(3) == 6
-    assert ft.get_sum(2) == 3
-    assert ft.get_sum(1) == 1
-    assert ft.get_sum(0) == 0
+    assert ft.get_prefix_sum(4) == 10
+    assert ft.get_prefix_sum(3) == 6
+    assert ft.get_prefix_sum(2) == 3
+    assert ft.get_prefix_sum(1) == 1
+    assert ft.get_prefix_sum(0) == 0
+
+    assert ft.get_range_sum(0, 4) == 10
+    assert ft.get_range_sum(1, 4) == 10
+    assert ft.get_range_sum(2, 4) == 9
+    assert ft.get_range_sum(2, 3) == 5
+    assert ft.get_range_sum(4, 4) == 4
+
+    nums = [0, 1, -2, 3, 4]
+    ft = FenwickTree(nums)
+    assert ft.get_range_sum(0, 4) == 6
+    assert ft.get_range_sum(2, 4) == 5
+    assert ft.get_range_sum(2, 2) == -2
 
